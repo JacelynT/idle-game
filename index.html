@@ -30,7 +30,7 @@
     .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
 
     .big-action{display:flex;gap:12px;align-items:center}
-    #click-btn{flex:1;padding:40px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#3b00ff,#0a0022 60%);border:2px solid #7be7ff66;cursor:pointer;font-size:18px;color:#7be7ff;box-shadow:0 0 20px #7be7ff55,inset 0 0 15px #3b00ffaa;transition:transform .1s, box-shadow .3s;}
+    .meteor-btn{flex:1;width:120px;height:120px;border-radius:50%;background:conic-gradient(from 180deg,#7be7ff,#3b00ff,#0a0022);border:3px solid #7be7ff66;cursor:pointer;color:#fff;box-shadow:0 0 20px #7be7ff55,inset 0 0 20px #3b00ffaa;animation:spinMeteor 6s linear infinite, pulseMeteor 3s ease-in-out infinite;}@keyframes spinMeteor{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}@keyframes pulseMeteor{0%,100%{box-shadow:0 0 15px #7be7ff55,inset 0 0 10px #3b00ff88;}50%{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #3b00ffaa;}}
 #click-btn:hover{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #5300ffaa;}
 #click-btn:active{transform:scale(0.95);}
     #click-btn:active{transform:translateY(1px)}
@@ -94,7 +94,7 @@
 
     <main class="panel">
       <div class="big-action">
-        <button id="click-btn" title="Click for a burst of stardust">Collect Stardust</button>
+        <button id="click-btn" class="meteor-btn" title="Click for a burst of stardust">Collect Stardust</button>
         <div class="stats">
           <div class="resource" id="stardust">0</div>
           <div class="sub">Stardust • <span id="per-sec">0</span>/sec</div>
@@ -380,7 +380,22 @@ buildingsEl.addEventListener('click', (e)=>{
     dateEl.textContent = new Date().toLocaleString();
   }
 
-  // simple spark animation when clicking
+  // Starfield generation
+(function(){
+  const bg=document.querySelector('.cosmic-bg');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2+1;
+    s.style.width=size+'px';s.style.height=size+'px';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=(Math.random()*200)+'%';
+    s.style.animationDuration=(20+Math.random()*40)+'s';
+    bg.appendChild(s);
+  }
+})();
+
+// simple spark animation when clicking
   const canvas = document.getElementById('spark-canvas'); const ctx = canvas.getContext('2d');
   function animateSpark(){
     const w=canvas.width=window.innerWidth; const h=canvas.height=150; canvas.style.left=(window.innerWidth-300)+'px'; canvas.style.top='80px';
