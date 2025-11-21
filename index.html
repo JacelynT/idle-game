@@ -30,7 +30,7 @@
     .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
 
     .big-action{display:flex;gap:12px;align-items:center}
-    .meteor-btn{flex:1;width:120px;height:120px;border-radius:50%;background:conic-gradient(from 180deg,#7be7ff,#3b00ff,#0a0022);border:3px solid #7be7ff66;cursor:pointer;color:#fff;box-shadow:0 0 20px #7be7ff55,inset 0 0 20px #3b00ffaa;animation:spinMeteor 6s linear infinite, pulseMeteor 3s ease-in-out infinite;}@keyframes spinMeteor{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}@keyframes pulseMeteor{0%,100%{box-shadow:0 0 15px #7be7ff55,inset 0 0 10px #3b00ff88;}50%{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #3b00ffaa;}}
+    .rock-btn{flex:1;width:140px;height:140px;border-radius:20% 35% 40% 25%/30% 40% 35% 45%;background:radial-gradient(circle at 30% 30%,#8a8a8a,#3a3a3a 70%);border:4px solid #bfbfbf33;cursor:pointer;color:#fff;box-shadow:0 0 25px #bfbfbf44,inset 0 0 25px #000a;animation:rockPulse 3s ease-in-out infinite;}@keyframes rockPulse{0%,100%{transform:rotate(0deg) scale(1);}50%{transform:rotate(2deg) scale(1.06);}}@keyframes spinMeteor{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}@keyframes pulseMeteor{0%,100%{box-shadow:0 0 15px #7be7ff55,inset 0 0 10px #3b00ff88;}50%{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #3b00ffaa;}}
 #click-btn:hover{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #5300ffaa;}
 #click-btn:active{transform:scale(0.95);}
     #click-btn:active{transform:translateY(1px)}
@@ -94,7 +94,7 @@
 
     <main class="panel">
       <div class="big-action">
-        <button id="click-btn" class="meteor-btn" title="Click for a burst of stardust">Collect Stardust</button>
+        <button id="click-btn" class="rock-btn" title="Click for a burst of stardust">Collect Stardust</button>
         <div class="stats">
           <div class="resource" id="stardust">0</div>
           <div class="sub">Stardust • <span id="per-sec">0</span>/sec</div>
@@ -315,7 +315,7 @@
 
 // delegated building buy
 buildingsEl.addEventListener('click', (e)=>{
-  if(e.target.closest('.buy-btn')){
+  if(e.target.closest('button[data-id]')){
     const id = e.target.closest('.item').dataset.id;
     buyBuilding(id);
   }
