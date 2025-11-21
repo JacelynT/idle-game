@@ -1,221 +1,491 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nebula Nook — Idle Game</title>
-  <style>
-    /* Reset & base */
-    :root{
-      --bg:#071029; --panel:#0d1b2a; --accent:#7be7ff; --muted:#9fb7c7; --glass: rgba(255,255,255,0.04);
-      --good:#7ee787; --bad:#ff7b7b;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;}
-    body{
-      margin:0;padding:24px;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;color:var(--accent);background:
-      radial-gradient(1200px 600px at 10% 20%, rgba(123,231,255,0.06), transparent 7%),
-      linear-gradient(180deg,#020617 0%, #04102a 100%);
-      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-    }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Nebula Nook — Idle Game</title>
+    <style>
+      /* Reset & base */
+      :root {
+        --bg: #071029;
+        --panel: #0d1b2a;
+        --accent: #7be7ff;
+        --muted: #9fb7c7;
+        --glass: rgba(255, 255, 255, 0.04);
+        --good: #7ee787;
+        --bad: #ff7b7b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto,
+          "Helvetica Neue", Arial;
+        color: var(--accent);
+        background: radial-gradient(
+            1200px 600px at 10% 20%,
+            rgba(123, 231, 255, 0.06),
+            transparent 7%
+          ),
+          linear-gradient(180deg, #020617 0%, #04102a 100%);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-    .container{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 20px;
+        align-items: start;
+      }
 
-    header{grid-column:1/-1;display:flex;align-items:center;gap:12px;margin-bottom:6px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#4fd1c5,#7be7ff);display:flex;align-items:center;justify-content:center;color:#012; font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.5)}
-    h1{margin:0;font-size:20px}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
+      header {
+        grid-column: 1/-1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4fd1c5, #7be7ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #012;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      p.lead {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
 
-    /* Main game panel */
-    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+      /* Main game panel */
+      .panel {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          transparent
+        );
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
 
-    .big-action{display:flex;gap:12px;align-items:center}
-    .rock-btn{flex:1;width:140px;height:140px;border-radius:20% 35% 40% 25%/30% 40% 35% 45%;background:radial-gradient(circle at 30% 30%,#8a8a8a,#3a3a3a 70%);border:4px solid #bfbfbf33;cursor:pointer;color:#fff;box-shadow:0 0 25px #bfbfbf44,inset 0 0 25px #000a;animation:rockPulse 3s ease-in-out infinite;}@keyframes rockPulse{0%,100%{transform:rotate(0deg) scale(1);}50%{transform:rotate(2deg) scale(1.06);}}@keyframes spinMeteor{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}@keyframes pulseMeteor{0%,100%{box-shadow:0 0 15px #7be7ff55,inset 0 0 10px #3b00ff88;}50%{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #3b00ffaa;}}
-#click-btn:hover{box-shadow:0 0 25px #7be7ffaa,inset 0 0 25px #5300ffaa;}
-#click-btn:active{transform:scale(0.95);}
-    #click-btn:active{transform:translateY(1px)}
-    .stats{min-width:200px;text-align:center}
-    .resource{font-size:18px;font-weight:700}
-    .sub{color:var(--muted);font-size:12px}
+      .big-action {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .rock-btn {
+        flex: 1;
+        width: 140px;
+        height: 140px;
+        border-radius: 20% 35% 40% 25%/30% 40% 35% 45%;
+        background: radial-gradient(circle at 30% 30%, #8a8a8a, #3a3a3a 70%);
+        border: 4px solid #bfbfbf33;
+        cursor: pointer;
+        color: #fff;
+        box-shadow: 0 0 25px #bfbfbf44, inset 0 0 25px #000a;
+        animation: rockPulse 3s ease-in-out infinite;
+      }
+      @keyframes rockPulse {
+        0%,
+        100% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(2deg) scale(1.06);
+        }
+      }
+      @keyframes spinMeteor {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes pulseMeteor {
+        0%,
+        100% {
+          box-shadow: 0 0 15px #7be7ff55, inset 0 0 10px #3b00ff88;
+        }
+        50% {
+          box-shadow: 0 0 25px #7be7ffaa, inset 0 0 25px #3b00ffaa;
+        }
+      }
+      #click-btn:hover {
+        box-shadow: 0 0 25px #7be7ffaa, inset 0 0 25px #5300ffaa;
+      }
+      #click-btn:active {
+        transform: scale(0.95);
+      }
+      #click-btn:active {
+        transform: translateY(1px);
+      }
+      .stats {
+        min-width: 200px;
+        text-align: center;
+      }
+      .resource {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 12px;
+      }
 
-    .list{margin-top:14px;display:grid;gap:8px}
-    .item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
-    .item .meta{display:flex;gap:10px;align-items:center}
-    .item button{padding:8px 10px;border-radius:8px;border:0;background:linear-gradient(90deg,#68e0ff33,#7be7ff11);color:var(--accent);cursor:pointer}
-    .small{font-size:12px;color:var(--muted)}
+      .list {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        background: var(--glass);
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+      .item .meta {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .item button {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 0;
+        background: linear-gradient(90deg, #68e0ff33, #7be7ff11);
+        color: var(--accent);
+        cursor: pointer;
+      }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
 
-    /* Sidebar */
-    .sidebar .panel{padding:12px}
-    .header-row{display:flex;justify-content:space-between;align-items:center}
+      /* Sidebar */
+      .sidebar .panel {
+        padding: 12px;
+      }
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:10px;overflow:hidden}
-    .progress > i{display:block;height:100%;background:linear-gradient(90deg,#7be7ff,#4fd1c5);width:0%}
+      .progress {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .progress > i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #7be7ff, #4fd1c5);
+        width: 0%;
+      }
 
-    .upgrades{margin-top:10px}
+      .upgrades {
+        margin-top: 10px;
+      }
 
-    footer{grid-column:1/-1;margin-top:16px;color:var(--muted);font-size:12px}
+      footer {
+        grid-column: 1/-1;
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 12px;
+      }
 
-    /* responsive */
-    @media(max-width:900px){.container{grid-template-columns:1fr;}.sidebar{order:2}.panel{margin-bottom:12px}}
+      /* responsive */
+      @media (max-width: 900px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          order: 2;
+        }
+        .panel {
+          margin-bottom: 12px;
+        }
+      }
 
-    /* small UI flourishes */
-    .spark{position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.6);filter:blur(.3px)}
+      /* small UI flourishes */
+      .spark {
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+        filter: blur(0.3px);
+      }
 
-    .achiev{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .badge{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);font-size:12px;color:var(--muted)}
-
-  </style>
-<style>
-    .cosmic-bg{
-      position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;
-      background:radial-gradient(circle at 20% 30%,#1a003366,transparent 60%),radial-gradient(circle at 80% 70%,#00224466,transparent 60%);
-      overflow:hidden;
-    }
-    @keyframes drift{0%{transform:translateY(0);}100%{transform:translateY(-2000px);} }
-    .star{
-      position:absolute;width:2px;height:2px;background:#7be7ff;border-radius:50%;opacity:.8;animation:drift linear infinite;
-    }
-  </style>
-</head>
-<body>
-  <div class="cosmic-bg"></div>
-  <div class="container">
-    <header>
-      <div class="logo">NN</div>
-      <div>
-        <h1>Nebula Nook</h1>
-        <p class="lead">Collect stardust, expand your extractors, unlock techs and ascend into constellations ✨</p>
-      </div>
-      <div style="margin-left:auto;text-align:right;color:var(--muted)">
-        <div id="date">—</div>
-        <div style="font-size:12px">Autosave every 10s • Offline progress</div>
-      </div>
-    </header>
-
-    <main class="panel">
-      <div class="big-action">
-        <button id="click-btn" class="rock-btn" title="Click for a burst of stardust">Collect Stardust</button>
-        <div class="stats">
-          <div class="resource" id="stardust">0</div>
-          <div class="sub">Stardust • <span id="per-sec">0</span>/sec</div>
+      .achiev {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .badge {
+        padding: 6px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.02);
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+    <style>
+      .cosmic-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        background: radial-gradient(
+            circle at 20% 30%,
+            #1a003366,
+            transparent 60%
+          ),
+          radial-gradient(circle at 80% 70%, #00224466, transparent 60%);
+        overflow: hidden;
+      }
+      @keyframes drift {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-2000px);
+        }
+      }
+      .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #7be7ff;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: drift linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cosmic-bg"></div>
+    <div class="container">
+      <header>
+        <div class="logo">NN</div>
+        <div>
+          <h1>Nebula Nook</h1>
+          <p class="lead">
+            Collect stardust, expand your extractors, unlock techs and ascend
+            into constellations ✨
+          </p>
         </div>
-      </div>
-
-      <div class="list" id="buildings">
-        <!-- generated by JS -->
-      </div>
-
-      <div style="display:flex;gap:12px;margin-top:12px;align-items:center">
-        <div style="flex:1">
-          <div class="small">Progress to next constellation</div>
-          <div class="progress" title="Progress to next prestige">
-            <i id="progress-bar"></i>
+        <div style="margin-left: auto; text-align: right; color: var(--muted)">
+          <div id="date">—</div>
+          <div style="font-size: 12px">
+            Autosave every 10s • Offline progress
           </div>
         </div>
-        <div style="min-width:120px;text-align:right">
-          <div class="small">Constellations</div>
-          <div id="constellations">0</div>
-        </div>
-      </div>
+      </header>
 
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <button id="save-btn">Save Now</button>
-        <button id="ascend-btn">Ascend (Prestige)</button>
-        <button id="reset-btn">Hard Reset</button>
-      </div>
-
-      <div style="margin-top:12px;color:var(--muted);font-size:13px">Tip: Clicking faster gives a temporary burst. Upgrades multiply passive income. Ascend to gain Constellations which permanently boost production.</div>
-    </main>
-
-    <aside class="sidebar">
-      <div class="panel">
-        <div class="header-row">
-          <strong>Upgrades</strong>
-          <small class="small" id="upgrade-points">0 pts</small>
-        </div>
-        <div class="upgrades" id="upgrades">
-          <!-- js -->
+      <main class="panel">
+        <div class="big-action">
+          <button
+            id="click-btn"
+            class="rock-btn"
+            title="Click for a burst of stardust"
+          >
+            Collect Stardust
+          </button>
+          <div class="stats">
+            <div class="resource" id="stardust">0</div>
+            <div class="sub">Stardust • <span id="per-sec">0</span>/sec</div>
+          </div>
         </div>
 
-        <hr style="border:none;height:10px">
-        <div class="header-row"><strong>Achievements</strong><small class="small">Tracked</small></div>
-        <div class="achiev" id="achievements"></div>
+        <div class="list" id="buildings">
+          <!-- generated by JS -->
+        </div>
 
-        <hr style="border:none;height:10px">
-        <div class="header-row"><strong>Save</strong><small class="small">localStorage</small></div>
-        <div class="small">Last save: <span id="last-save">never</span></div>
-      </div>
-    </aside>
+        <div
+          style="
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: center;
+          "
+        >
+          <div style="flex: 1">
+            <div class="small">Progress to next constellation</div>
+            <div class="progress" title="Progress to next prestige">
+              <i id="progress-bar"></i>
+            </div>
+          </div>
+          <div style="min-width: 120px; text-align: right">
+            <div class="small">Constellations</div>
+            <div id="constellations">0</div>
+          </div>
+        </div>
 
-    <footer>
-      Built for fun — responsive single-file demo. Want more features (shop automation, animations, or multiplayer leaderboard)? Ask and I'll add them.
-    </footer>
-  </div>
+        <div
+          style="
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+          "
+        >
+          <button id="save-btn">Save Now</button>
+          <button id="ascend-btn">Ascend (Prestige)</button>
+          <button id="reset-btn">Hard Reset</button>
+        </div>
 
-  <canvas id="spark-canvas" class="spark" width="300" height="150"></canvas>
+        <div style="margin-top: 12px; color: var(--muted); font-size: 13px">
+          Tip: Clicking faster gives a temporary burst. Upgrades multiply
+          passive income. Ascend to gain Constellations which permanently boost
+          production.
+        </div>
+      </main>
 
-  <script>
-  // Nebula Nook — single-file idle game
-  // Save state and offline progression, buildings, upgrades, prestige.
+      <aside class="sidebar">
+        <div class="panel">
+          <div class="header-row">
+            <strong>Upgrades</strong>
+            <small class="small" id="upgrade-points">0 pts</small>
+          </div>
+          <div class="upgrades" id="upgrades">
+            <!-- js -->
+          </div>
 
-  const DEFAULTS = {
-    stardust: 0,
-    constellations: 0,
-    buildings: [
-      {id:'drone',name:'Drone',baseCost:5,baseProd:0.1,owned:0},
-      {id:'extractor',name:'Extractor',baseCost:50,baseProd:1,owned:0},
-      {id:'lab',name:'Lab',baseCost:500,baseProd:8,owned:0},
-      {id:'observatory',name:'Observatory',baseCost:4000,baseProd:55,owned:0}
-    ],
-    upgrades: {clickBoost:0,globalMult:1},
-    achievements: {},
-    lastTimestamp: Date.now(),
-  }
+          <hr style="border: none; height: 10px" />
+          <div class="header-row">
+            <strong>Achievements</strong><small class="small">Tracked</small>
+          </div>
+          <div class="achiev" id="achievements"></div>
 
-  let state = JSON.parse(localStorage.getItem('nebula_save')||'null') || DEFAULTS;
-  // when loading from storage, ensure new buildings appear
-  function reconcile(){
-    const ids = state.buildings.map(b=>b.id);
-    for(const b of DEFAULTS.buildings){ if(!ids.includes(b.id)) state.buildings.push(b); }
-  }
-  reconcile();
+          <hr style="border: none; height: 10px" />
+          <div class="header-row">
+            <strong>Save</strong><small class="small">localStorage</small>
+          </div>
+          <div class="small">Last save: <span id="last-save">never</span></div>
+        </div>
+      </aside>
 
-  const FMT = n => {
-    if(n>=1e12) return (n/1e12).toFixed(2)+'T';
-    if(n>=1e9) return (n/1e9).toFixed(2)+'B';
-    if(n>=1e6) return (n/1e6).toFixed(2)+'M';
-    if(n>=1e3) return (n/1e3).toFixed(2)+'k';
-    return (Math.round(n*100)/100).toString();
-  }
+      <footer>
+        Built for fun — responsive single-file demo. Want more features (shop
+        automation, animations, or multiplayer leaderboard)? Ask and I'll add
+        them.
+      </footer>
+    </div>
 
-  // UI refs
-  const stardustEl = document.getElementById('stardust');
-  const perSecEl = document.getElementById('per-sec');
-  const buildingsEl = document.getElementById('buildings');
-  const upgradesEl = document.getElementById('upgrades');
-  const achievementsEl = document.getElementById('achievements');
-  const progressBar = document.getElementById('progress-bar');
-  const constellationsEl = document.getElementById('constellations');
-  const dateEl = document.getElementById('date');
-  const lastSaveEl = document.getElementById('last-save');
+    <canvas id="spark-canvas" class="spark" width="300" height="150"></canvas>
 
-  // Add this event delegation for buy buttons:
-  buildingsEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-id]');
-    if (btn) {
-      buyBuilding(btn.dataset.id);
-    }
-  });
+    <script>
+      // Nebula Nook — single-file idle game
+      // Save state and offline progression, buildings, upgrades, prestige.
 
-  // Build UI
-  function renderBuildings(){
-    buildingsEl.innerHTML='';
-    for(const b of state.buildings){
-      const cost = calcCost(b.baseCost,b.owned);
-      const div = document.createElement('div');div.className='item';
-      div.innerHTML = `
+      const DEFAULTS = {
+        stardust: 0,
+        constellations: 0,
+        buildings: [
+          { id: "drone", name: "Drone", baseCost: 5, baseProd: 0.1, owned: 0 },
+          {
+            id: "extractor",
+            name: "Extractor",
+            baseCost: 50,
+            baseProd: 1,
+            owned: 0,
+          },
+          { id: "lab", name: "Lab", baseCost: 500, baseProd: 8, owned: 0 },
+          {
+            id: "observatory",
+            name: "Observatory",
+            baseCost: 4000,
+            baseProd: 55,
+            owned: 0,
+          },
+        ],
+        upgrades: { clickBoost: 0, globalMult: 1 },
+        achievements: {},
+        lastTimestamp: Date.now(),
+      };
+
+      let state =
+        JSON.parse(localStorage.getItem("nebula_save") || "null") || DEFAULTS;
+      // when loading from storage, ensure new buildings appear
+      function reconcile() {
+        const ids = state.buildings.map((b) => b.id);
+        for (const b of DEFAULTS.buildings) {
+          if (!ids.includes(b.id)) state.buildings.push(b);
+        }
+      }
+      reconcile();
+
+      const FMT = (n) => {
+        if (n >= 1e12) return (n / 1e12).toFixed(2) + "T";
+        if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+        if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+        if (n >= 1e3) return (n / 1e3).toFixed(2) + "k";
+        return (Math.round(n * 100) / 100).toString();
+      };
+
+      // UI refs
+      const stardustEl = document.getElementById("stardust");
+      const perSecEl = document.getElementById("per-sec");
+      const buildingsEl = document.getElementById("buildings");
+      const upgradesEl = document.getElementById("upgrades");
+      const achievementsEl = document.getElementById("achievements");
+      const progressBar = document.getElementById("progress-bar");
+      const constellationsEl = document.getElementById("constellations");
+      const dateEl = document.getElementById("date");
+      const lastSaveEl = document.getElementById("last-save");
+
+      // Add this event delegation for buy buttons:
+      buildingsEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-id]");
+        if (btn) {
+          buyBuilding(btn.dataset.id);
+        }
+      });
+
+      // Build UI
+      function renderBuildings() {
+        buildingsEl.innerHTML = "";
+        for (const b of state.buildings) {
+          const cost = calcCost(b.baseCost, b.owned);
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `
         <div class="meta">
-          <div style="width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,#071b2a,#053042);display:flex;align-items:center;justify-content:center;font-weight:700">${b.name.charAt(0)}</div>
+          <div style="width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,#071b2a,#053042);display:flex;align-items:center;justify-content:center;font-weight:700">${b.name.charAt(
+            0
+          )}</div>
           <div>
             <div style="font-weight:700">${b.name}</div>
             <div class="small">Produces ${b.baseProd} / unit</div>
@@ -224,213 +494,370 @@
         <div style="text-align:right">
           <div style="font-weight:700">${b.owned}</div>
           <div class="small">Cost: ${FMT(cost)}</div>
-          <div style="margin-top:6px"><button data-id="${b.id}">Buy</button></div>
+          <div style="margin-top:6px"><button data-id="${
+            b.id
+          }">Buy</button></div>
         </div>
       `;
-      buildingsEl.appendChild(div);
-    }
-  }
-
-  function renderUpgrades(){
-    upgradesEl.innerHTML='';
-    const upHTML = [
-      {id:'clickBoost',name:'Click Amplifier',desc:'Clicks give +stardust',cost:100},
-      {id:'multiplier',name:'Global Multiplier',desc:'Multiply all production by 2',cost:1000}
-    ];
-    for(const u of upHTML){
-      const div=document.createElement('div');div.className='item';
-      div.innerHTML=`<div><div style="font-weight:700">${u.name}</div><div class="small">${u.desc}</div></div><div><div class="small">Cost: ${FMT(u.cost)}</div><div style="margin-top:6px"><button data-id="${u.id}">Buy</button></div></div>`;
-      upgradesEl.appendChild(div);
-    }
-    upgradesEl.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>buyUpgrade(b.dataset.id)));
-  }
-
-  function renderAchievements(){
-    achievementsEl.innerHTML='';
-    const list = [
-      {id:'firstDust',label:'First Stardust',check:()=>state.stardust>=1},
-      {id:'hundredDust',label:'100 Stardust',check:()=>state.stardust>=100},
-      {id:'firstDrone',label:'Own 1 Drone',check:()=>getOwned('drone')>=1},
-      {id:'bigProducer',label:'1000 / sec',check:()=>calcProduction()>=1000}
-    ];
-    for(const a of list){
-      const have = state.achievements[a.id] || false;
-      const el=document.createElement('div');el.className='badge';el.textContent = have?`🏆 ${a.label}`:a.label;
-      achievementsEl.appendChild(el);
-      if(!have && a.check()){
-        state.achievements[a.id]=true; // mark and notify
-        notify(`Achievement unlocked: ${a.label}`);
+          buildingsEl.appendChild(div);
+        }
       }
-    }
-  }
 
-  function pushNotification(text){
-    // small in-page toast
-    const el = document.createElement('div');el.textContent=text;el.style.position='fixed';el.style.right='18px';el.style.bottom='18px';el.style.padding='10px 14px';el.style.background='linear-gradient(90deg,#7be7ff16,#4fd1c533)';el.style.border='1px solid rgba(255,255,255,0.04)';el.style.borderRadius='10px';el.style.color= 'var(--accent)';el.style.zIndex=9999;document.body.appendChild(el);
-    setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(10px)';},2500);setTimeout(()=>el.remove(),3500);
-  }
-  const notify = pushNotification;
+      // Add this event delegation for upgrade buy buttons:
+      upgradesEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-id]");
+        if (btn) {
+          buyUpgrade(btn.dataset.id);
+        }
+      });
 
-  // Game logic
-  function calcCost(base,count){
-    return Math.round(base * Math.pow(1.15,count));
-  }
+      function renderUpgrades() {
+        upgradesEl.innerHTML = "";
+        const upHTML = [
+          {
+            id: "clickBoost",
+            name: "Click Amplifier",
+            desc: "Clicks give +stardust",
+            cost: 100,
+          },
+          {
+            id: "multiplier",
+            name: "Global Multiplier",
+            desc: "Multiply all production by 2",
+            cost: 1000,
+          },
+        ];
+        for (const u of upHTML) {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `<div><div style="font-weight:700">${
+            u.name
+          }</div><div class="small">${
+            u.desc
+          }</div></div><div><div class="small">Cost: ${FMT(
+            u.cost
+          )}</div><div style="margin-top:6px"><button data-id="${
+            u.id
+          }">Buy</button></div></div>`;
+          upgradesEl.appendChild(div);
+        }
+      }
 
-  function getOwned(id){
-    const b = state.buildings.find(x=>x.id===id); return b?b.owned:0;
-  }
+      function renderAchievements() {
+        achievementsEl.innerHTML = "";
+        const list = [
+          {
+            id: "firstDust",
+            label: "First Stardust",
+            check: () => state.stardust >= 1,
+          },
+          {
+            id: "hundredDust",
+            label: "100 Stardust",
+            check: () => state.stardust >= 100,
+          },
+          {
+            id: "firstDrone",
+            label: "Own 1 Drone",
+            check: () => getOwned("drone") >= 1,
+          },
+          {
+            id: "bigProducer",
+            label: "1000 / sec",
+            check: () => calcProduction() >= 1000,
+          },
+        ];
+        for (const a of list) {
+          const have = state.achievements[a.id] || false;
+          const el = document.createElement("div");
+          el.className = "badge";
+          el.textContent = have ? `🏆 ${a.label}` : a.label;
+          achievementsEl.appendChild(el);
+          if (!have && a.check()) {
+            state.achievements[a.id] = true; // mark and notify
+            notify(`Achievement unlocked: ${a.label}`);
+          }
+        }
+      }
 
-  function calcProduction(){
-    let prod = 0;
-    for(const b of state.buildings){ prod += b.baseProd * b.owned; }
-    // apply constellation bonus
-    prod *= 1 + state.constellations*0.1;
-    // apply upgrades
-    prod *= state.upgrades.globalMult || 1;
-    return prod;
-  }
+      function pushNotification(text) {
+        // small in-page toast
+        const el = document.createElement("div");
+        el.textContent = text;
+        el.style.position = "fixed";
+        el.style.right = "18px";
+        el.style.bottom = "18px";
+        el.style.padding = "10px 14px";
+        el.style.background = "linear-gradient(90deg,#7be7ff16,#4fd1c533)";
+        el.style.border = "1px solid rgba(255,255,255,0.04)";
+        el.style.borderRadius = "10px";
+        el.style.color = "var(--accent)";
+        el.style.zIndex = 9999;
+        document.body.appendChild(el);
+        setTimeout(() => {
+          el.style.opacity = "0";
+          el.style.transform = "translateY(10px)";
+        }, 2500);
+        setTimeout(() => el.remove(), 3500);
+      }
+      const notify = pushNotification;
 
-  function tick(dt){
-    const prod = calcProduction();
-    state.stardust += prod * dt;
-  }
+      // Game logic
+      function calcCost(base, count) {
+        return Math.round(base * Math.pow(1.15, count));
+      }
 
-  // Buy functions
-  function buyBuilding(id){
-    const b = state.buildings.find(x=>x.id===id); if(!b) return;
-    const cost = calcCost(b.baseCost,b.owned);
-    if(state.stardust >= cost){ state.stardust -= cost; b.owned += 1; notify(`Bought ${b.name}`); checkAchievements(); save(); render(); } else { notify('Not enough Stardust'); }
-  }
-  function buyUpgrade(id){
-    if(id==='clickBoost'){
-      const cost = 100;
-      if(state.stardust>=cost){ state.stardust-=cost; state.upgrades.clickBoost = (state.upgrades.clickBoost||0)+1; notify('Clicks boosted!'); save(); render(); } else notify('Not enough Stardust');
-    } else if(id==='multiplier'){
-      const cost=1000; if(state.stardust>=cost){ state.stardust-=cost; state.upgrades.globalMult = (state.upgrades.globalMult||1)*2; notify('Global production x2'); save(); render(); } else notify('Not enough Stardust');
-    }
-  }
+      function getOwned(id) {
+        const b = state.buildings.find((x) => x.id === id);
+        return b ? b.owned : 0;
+      }
 
-  // Click button
-  document.getElementById('click-btn').addEventListener('click',()=>{
-    const base = 1 + (state.upgrades.clickBoost||0)*0.5;
-    const gain = base * (1 + (Math.random()*0.5));
-    state.stardust += gain;
-    animateSpark();
-    checkAchievements(); render();
-});
+      function calcProduction() {
+        let prod = 0;
+        for (const b of state.buildings) {
+          prod += b.baseProd * b.owned;
+        }
+        // apply constellation bonus
+        prod *= 1 + state.constellations * 0.1;
+        // apply upgrades
+        prod *= state.upgrades.globalMult || 1;
+        return prod;
+      }
 
-  // Ascend (Prestige)
-  document.getElementById('ascend-btn').addEventListener('click',()=>{
-    const needed = prodForNextConstellation();
-    if(calcProduction() >= needed){
-      state.constellations += 1; // reward
-      // reset most progress but keep upgrades and constellations
-      const keep = {constellations: state.constellations, upgrades: state.upgrades};
-      state = Object.assign({}, DEFAULTS, keep);
-      reconcile();
-      notify('Ascended! You gained a Constellation ✨');
-      save(); render();
-    } else {
-      notify(`Need ${FMT(needed)} / sec to ascend.`);
-    }
-  });
+      function tick(dt) {
+        const prod = calcProduction();
+        state.stardust += prod * dt;
+      }
 
-  function prodForNextConstellation(){
-    return 50 * Math.pow(10, state.constellations); // exponential goal
-  }
+      // Buy functions
+      function buyBuilding(id) {
+        const b = state.buildings.find((x) => x.id === id);
+        if (!b) return;
+        const cost = calcCost(b.baseCost, b.owned);
+        if (state.stardust >= cost) {
+          state.stardust -= cost;
+          b.owned += 1;
+          notify(`Bought ${b.name}`);
+          checkAchievements();
+          save();
+          render();
+        } else {
+          notify("Not enough Stardust");
+        }
+      }
+      function buyUpgrade(id) {
+        if (id === "clickBoost") {
+          const cost = 100;
+          if (state.stardust >= cost) {
+            state.stardust -= cost;
+            state.upgrades.clickBoost = (state.upgrades.clickBoost || 0) + 1;
+            notify("Clicks boosted!");
+            save();
+            render();
+          } else notify("Not enough Stardust");
+        } else if (id === "multiplier") {
+          const cost = 1000;
+          if (state.stardust >= cost) {
+            state.stardust -= cost;
+            state.upgrades.globalMult = (state.upgrades.globalMult || 1) * 2;
+            notify("Global production x2");
+            save();
+            render();
+          } else notify("Not enough Stardust");
+        }
+      }
 
-  document.getElementById('reset-btn').addEventListener('click',()=>{
-    if(confirm('Are you sure? This will wipe your save.')){ localStorage.removeItem('nebula_save'); state = JSON.parse(JSON.stringify(DEFAULTS)); reconcile(); save(); render(); notify('Save reset.'); }
-  });
+      // Click button
+      document.getElementById("click-btn").addEventListener("click", () => {
+        const base = 1 + (state.upgrades.clickBoost || 0) * 0.5;
+        const gain = base * (1 + Math.random() * 0.5);
+        state.stardust += gain;
+        animateSpark();
+        checkAchievements();
+        render();
+      });
 
-  document.getElementById('save-btn').addEventListener('click',()=>{ save(true); notify('Saved'); });
+      // Ascend (Prestige)
+      document.getElementById("ascend-btn").addEventListener("click", () => {
+        const needed = prodForNextConstellation();
+        if (calcProduction() >= needed) {
+          state.constellations += 1; // reward
+          // reset most progress but keep upgrades and constellations
+          const keep = {
+            constellations: state.constellations,
+            upgrades: state.upgrades,
+          };
+          state = Object.assign({}, DEFAULTS, keep);
+          reconcile();
+          notify("Ascended! You gained a Constellation ✨");
+          save();
+          render();
+        } else {
+          notify(`Need ${FMT(needed)} / sec to ascend.`);
+        }
+      });
 
-  // Saving
-  function save(manual=false){
-    state.lastTimestamp = Date.now();
-    localStorage.setItem('nebula_save', JSON.stringify(state));
-    lastSaveEl.textContent = new Date(state.lastTimestamp).toLocaleString();
-  }
+      function prodForNextConstellation() {
+        return 50 * Math.pow(10, state.constellations); // exponential goal
+      }
 
-  // Offline progress
-  function handleOfflineProgress(){
-    const now = Date.now();
-    const diff = Math.floor((now - (state.lastTimestamp||now))/1000);
-    if(diff>5){
-      const prod = calcProduction();
-      const gained = prod * diff;
-      state.stardust += gained;
-      notify(`While you were away: +${FMT(gained)} Stardust`);
-    }
-    state.lastTimestamp = now;
-  }
+      document.getElementById("reset-btn").addEventListener("click", () => {
+        if (confirm("Are you sure? This will wipe your save.")) {
+          localStorage.removeItem("nebula_save");
+          state = JSON.parse(JSON.stringify(DEFAULTS));
+          reconcile();
+          save();
+          render();
+          notify("Save reset.");
+        }
+      });
 
-  // Achievements check
-  function checkAchievements(){ renderAchievements(); }
+      document.getElementById("save-btn").addEventListener("click", () => {
+        save(true);
+        notify("Saved");
+      });
 
-  // render everything
-  function render(){
-    stardustEl.textContent = FMT(state.stardust);
-    perSecEl.textContent = FMT(calcProduction());
-    renderBuildings(); renderUpgrades(); renderAchievements();
-    progressBar.style.width = Math.min(100, (calcProduction()/prodForNextConstellation())*100) + '%';
-    constellationsEl.textContent = state.constellations;
-    dateEl.textContent = new Date().toLocaleString();
-  }
+      // Saving
+      function save(manual = false) {
+        state.lastTimestamp = Date.now();
+        localStorage.setItem("nebula_save", JSON.stringify(state));
+        lastSaveEl.textContent = new Date(state.lastTimestamp).toLocaleString();
+      }
 
-  // Starfield generation
-(function(){
-  const bg=document.querySelector('.cosmic-bg');
-  for(let i=0;i<120;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    const size=Math.random()*2+1;
-    s.style.width=size+'px';s.style.height=size+'px';
-    s.style.left=Math.random()*100+'%';
-    s.style.top=(Math.random()*200)+'%';
-    s.style.animationDuration=(20+Math.random()*40)+'s';
-    bg.appendChild(s);
-  }
-})();
+      // Offline progress
+      function handleOfflineProgress() {
+        const now = Date.now();
+        const diff = Math.floor((now - (state.lastTimestamp || now)) / 1000);
+        if (diff > 5) {
+          const prod = calcProduction();
+          const gained = prod * diff;
+          state.stardust += gained;
+          notify(`While you were away: +${FMT(gained)} Stardust`);
+        }
+        state.lastTimestamp = now;
+      }
 
-// simple spark animation when clicking
-  const canvas = document.getElementById('spark-canvas'); const ctx = canvas.getContext('2d');
-  function animateSpark(){
-    const w=canvas.width=window.innerWidth; const h=canvas.height=150; canvas.style.left=(window.innerWidth-300)+'px'; canvas.style.top='80px';
-    let particles = [];
-    for(let i=0;i<18;i++){ particles.push({x:150,y:75,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.8)*-6,life:Math.random()*45+20}); }
-    let t=0;
-    function step(){ ctx.clearRect(0,0,w,h); t++; particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.life--; ctx.globalAlpha = Math.max(0,p.life/60); ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(1,p.life/8),0,Math.PI*2); ctx.fillStyle='rgba(123,231,255,0.9)'; ctx.fill(); }); if(particles.some(p=>p.life>0)&&t<120){ requestAnimationFrame(step); } else { ctx.clearRect(0,0,w,h); } }
-    step();
-  }
+      // Achievements check
+      function checkAchievements() {
+        renderAchievements();
+      }
 
-  // Main loop using rAF for smooth UI updates and setInterval for tick
-  let last = performance.now();
-  function frame(now){ const dt = (now-last)/1000; last = now; // UI tick
-    render(); requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+      // render everything
+      function render() {
+        stardustEl.textContent = FMT(state.stardust);
+        perSecEl.textContent = FMT(calcProduction());
+        renderBuildings();
+        renderUpgrades();
+        renderAchievements();
+        progressBar.style.width =
+          Math.min(100, (calcProduction() / prodForNextConstellation()) * 100) +
+          "%";
+        constellationsEl.textContent = state.constellations;
+        dateEl.textContent = new Date().toLocaleString();
+      }
 
-  // Game tick every second
-  setInterval(()=>{ tick(1); checkAchievements(); save(); },1000);
+      // Starfield generation
+      (function () {
+        const bg = document.querySelector(".cosmic-bg");
+        for (let i = 0; i < 120; i++) {
+          const s = document.createElement("div");
+          s.className = "star";
+          const size = Math.random() * 2 + 1;
+          s.style.width = size + "px";
+          s.style.height = size + "px";
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = Math.random() * 200 + "%";
+          s.style.animationDuration = 20 + Math.random() * 40 + "s";
+          bg.appendChild(s);
+        }
+      })();
 
-  // Autosave every 10s
-  setInterval(()=>{ save(); },10000);
+      // simple spark animation when clicking
+      const canvas = document.getElementById("spark-canvas");
+      const ctx = canvas.getContext("2d");
+      function animateSpark() {
+        const w = (canvas.width = window.innerWidth);
+        const h = (canvas.height = 150);
+        canvas.style.left = window.innerWidth - 300 + "px";
+        canvas.style.top = "80px";
+        let particles = [];
+        for (let i = 0; i < 18; i++) {
+          particles.push({
+            x: 150,
+            y: 75,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.8) * -6,
+            life: Math.random() * 45 + 20,
+          });
+        }
+        let t = 0;
+        function step() {
+          ctx.clearRect(0, 0, w, h);
+          t++;
+          particles.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.2;
+            p.life--;
+            ctx.globalAlpha = Math.max(0, p.life / 60);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, Math.max(1, p.life / 8), 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(123,231,255,0.9)";
+            ctx.fill();
+          });
+          if (particles.some((p) => p.life > 0) && t < 120) {
+            requestAnimationFrame(step);
+          } else {
+            ctx.clearRect(0, 0, w, h);
+          }
+        }
+        step();
+      }
 
-  // On load
-  handleOfflineProgress(); render();
+      // Main loop using rAF for smooth UI updates and setInterval for tick
+      let last = performance.now();
+      function frame(now) {
+        const dt = (now - last) / 1000;
+        last = now; // UI tick
+        render();
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
 
-  // Initial date
-  dateEl.textContent = new Date().toLocaleString();
+      // Game tick every second
+      setInterval(() => {
+        tick(1);
+        checkAchievements();
+        save();
+      }, 1000);
 
-  // keyboard shortcuts for fun
-  window.addEventListener('keydown',(e)=>{
-    if(e.key===' '){ document.getElementById('click-btn').click(); e.preventDefault(); }
-    if(e.key==='S' && (e.ctrlKey||e.metaKey)){ save(true); notify('Saved (shortcut)'); e.preventDefault(); }
-  });
+      // Autosave every 10s
+      setInterval(() => {
+        save();
+      }, 10000);
 
-  // expose for debugging in console
-  window._nebula = {state,save,render};
-  </script>
-</body>
+      // On load
+      handleOfflineProgress();
+      render();
+
+      // Initial date
+      dateEl.textContent = new Date().toLocaleString();
+
+      // keyboard shortcuts for fun
+      window.addEventListener("keydown", (e) => {
+        if (e.key === " ") {
+          document.getElementById("click-btn").click();
+          e.preventDefault();
+        }
+        if (e.key === "S" && (e.ctrlKey || e.metaKey)) {
+          save(true);
+          notify("Saved (shortcut)");
+          e.preventDefault();
+        }
+      });
+
+      // expose for debugging in console
+      window._nebula = { state, save, render };
+    </script>
+  </body>
 </html>
