@@ -431,7 +431,7 @@
             owned: 0,
           },
         ],
-        upgrades: { clickBoost: 0, globalMult: 1 },
+        upgrades: { clickBoost: 0, globalMult: 1, clickBoostOwned: 0, globalMultOwned: 0 },
         achievements: {},
         lastTimestamp: Date.now(),
       };
@@ -518,16 +518,17 @@
             id: "clickBoost",
             name: "Click Amplifier",
             desc: "Clicks give +stardust",
-            cost: 100,
+            owned: state.upgrades.clickBoostOwned || 0,
           },
           {
             id: "multiplier",
             name: "Global Multiplier",
             desc: "Multiply all production by 2",
-            cost: 1000,
+            owned: state.upgrades.globalMultOwned || 0,
           },
         ];
         for (const u of upHTML) {
+          const cost = calcUpgradeCost(u.id, u.owned);
           const div = document.createElement("div");
           div.className = "item";
           div.innerHTML = `<div><div style="font-weight:700">${
@@ -535,7 +536,7 @@
           }</div><div class="small">${
             u.desc
           }</div></div><div><div class="small">Cost: ${FMT(
-            u.cost
+            cost
           )}</div><div style="margin-top:6px"><button data-id="${
             u.id
           }">Buy</button></div></div>`;
@@ -607,6 +608,16 @@
         return Math.round(base * Math.pow(1.15, count));
       }
 
+      function calcUpgradeCost(id, owned) {
+        if (id === "clickBoost") {
+          return Math.round(100 * Math.pow(1.5, owned)); // Increase by 50% each time
+        }
+        if (id === "multiplier") {
+          return Math.round(1000 * Math.pow(2, owned)); // Double each time
+        }
+        return 0;
+      }
+
       function getOwned(id) {
         const b = state.buildings.find((x) => x.id === id);
         return b ? b.owned : 0;
@@ -647,19 +658,23 @@
       }
       function buyUpgrade(id) {
         if (id === "clickBoost") {
-          const cost = 100;
+          const owned = state.upgrades.clickBoostOwned || 0;
+          const cost = calcUpgradeCost("clickBoost", owned);
           if (state.stardust >= cost) {
             state.stardust -= cost;
             state.upgrades.clickBoost = (state.upgrades.clickBoost || 0) + 1;
+            state.upgrades.clickBoostOwned = owned + 1;
             notify("Clicks boosted!");
             save();
             render();
           } else notify("Not enough Stardust");
         } else if (id === "multiplier") {
-          const cost = 1000;
+          const owned = state.upgrades.globalMultOwned || 0;
+          const cost = calcUpgradeCost("multiplier", owned);
           if (state.stardust >= cost) {
             state.stardust -= cost;
             state.upgrades.globalMult = (state.upgrades.globalMult || 1) * 2;
+            state.upgrades.globalMultOwned = owned + 1;
             notify("Global production x2");
             save();
             render();
@@ -672,9 +687,9 @@
         const base = 1 + (state.upgrades.clickBoost || 0) * 0.5;
         const gain = base * (1 + Math.random() * 0.5);
         state.stardust += gain;
+        render();
         animateSpark();
         checkAchievements();
-        render();
       });
 
       // Ascend (Prestige)
@@ -778,6 +793,8 @@
       function animateSpark() {
         const w = (canvas.width = 300);
         const h = (canvas.height = 150);
+        const btn = document.getElementById("click-btn");
+        const rect = btn.getBoundingClientRect();
         canvas.style.left = window.innerWidth - 300 + "px";
         canvas.style.top = "80px";
         let particles = [];
