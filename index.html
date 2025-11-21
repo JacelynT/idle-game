@@ -674,7 +674,6 @@
         state.stardust += gain;
         animateSpark();
         checkAchievements();
-        render();
       });
 
       // Ascend (Prestige)
@@ -819,7 +818,6 @@
       function frame(now) {
         const dt = (now - last) / 1000;
         last = now; // UI tick
-        render();
         requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
@@ -829,6 +827,7 @@
         tick(1);
         checkAchievements();
         save();
+        render();
       }, 1000);
 
       // Autosave every 10s
@@ -838,7 +837,6 @@
 
       // On load
       handleOfflineProgress();
-      render();
 
       // Initial date
       dateEl.textContent = new Date().toLocaleString();
