@@ -313,14 +313,6 @@
     checkAchievements(); render();
 });
 
-// delegated building buy
-buildingsEl.addEventListener('click', (e)=>{
-  if(e.target.closest('button[data-id]')){
-    const id = e.target.closest('.item').dataset.id;
-    buyBuilding(id);
-  }
-});
-
   // Ascend (Prestige)
   document.getElementById('ascend-btn').addEventListener('click',()=>{
     const needed = prodForNextConstellation();
