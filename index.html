@@ -199,6 +199,14 @@
   const dateEl = document.getElementById('date');
   const lastSaveEl = document.getElementById('last-save');
 
+  // Add this event delegation for buy buttons:
+  buildingsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-id]');
+    if (btn) {
+      buyBuilding(btn.dataset.id);
+    }
+  });
+
   // Build UI
   function renderBuildings(){
     buildingsEl.innerHTML='';
@@ -221,8 +229,6 @@
       `;
       buildingsEl.appendChild(div);
     }
-    // attach listeners
-    buildingsEl.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>buyBuilding(btn.dataset.id)));
   }
 
   function renderUpgrades(){
